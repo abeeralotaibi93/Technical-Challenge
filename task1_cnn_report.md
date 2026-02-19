@@ -75,9 +75,17 @@ On the test set, the CNN achieved accuracy = 88.14%, precision = 85.76%, recall 
 
 From the confusion matrix, true positives (pneumonia correctly detected) = 381, true negatives (normal correctly detected) = 171, false positives = 63, and false negatives = 11. These numbers reflect an engineering trade-off favouring sensitivity: the network prioritises detecting pneumonia and minimises false negatives (only 11 missed cases), which is clinically important. The 63 false positives primarily result from subtle shadows or low-contrast patterns in normal X-rays that the CNN misinterprets as pathological, highlighting the limitations imposed by low-resolution input.
 
+<img width="513" height="457" alt="image" src="https://github.com/user-attachments/assets/679c899e-7877-4dc4-8403-d2d744c3d54e" />
+
+
 The ROC curve rises sharply at first and forms a smooth, convex shape, getting close to the top-left corner, with an AUC of 0.9467. This means the model is very good at distinguishing pneumonia cases from normal ones. Across most thresholds, it achieves high true positive rates while keeping false positives low, indicating that it consistently identifies pneumonia correctly.
 
+<img width="697" height="480" alt="image" src="https://github.com/user-attachments/assets/6d9aa48f-7cf8-42a1-8522-6f84e6bf0526" />
+
 The training curves show that the model is learning well. Both the training and validation losses started around 0.53 and 0.38 but steadily dropped to about 0.20 by the fifteenth epoch. The validation loss closely follows the training loss and even dips slightly below it at times. Since the two curves move together without splitting apart, this suggests the model is not overfitting and generalises well, showing that data augmentation and early stopping worked effectively.
+
+<img width="651" height="488" alt="image" src="https://github.com/user-attachments/assets/9520dc4a-7464-4267-abbb-429944d420b4" />
+
 
 ### 5.1 Failure Case Analysis
 
@@ -85,19 +93,22 @@ Visual inspection of the ten misclassified cases reveals systematic patterns in 
 
 The single false negative case (True: 1, Pred: 0) displays subtle bilateral infiltrates with preserved lung lucency, representing early-stage or atypical pneumonia where minimal consolidation becomes undetectable at low resolution. This case demonstrates the fundamental limitation of 28×28 pixel representation, where fine reticular patterns and ground-glass opacities characteristic of viral or interstitial pneumonia are lost during downsampling, preventing the model from recognising diffuse patterns that differ from the dense alveolar consolidation it predominantly learned from the training set.
 
+
+<img width="1124" height="444" alt="image" src="https://github.com/user-attachments/assets/b382e884-d9c6-4ac9-b0b7-26186b4e6234" />
+
+
 ## 6. Model Strengths and Limitations
 
-**Strengths**
+The model demonstrates several strengths that make it suitable as a prototype for an integrated medical AI system. First, the architecture is computationally
+efficient and can be trained on standard hardware without requiring GPUs, aligning well with the challenge’s objective of building accessible AI solutions.
+Second, the use of domain-appropriate augmentation improves generalization while preserving clinical realism. Third, the model achieves a high Recall and AUC, indicating strong sensitivity to pathological findings, a key requirement for diagnostic-support tools. The observed failure cases highlight not only technical limitations but also an interpretability gap. While the model achieves high sensitivity, it provides no explicit reasoning for its predictions, making it difficult to determine whether decisions are based on clinically meaningful patterns or dataset-specific artifacts (Houssein et al., 2025). 
 
-The model demonstrates several strengths that make it suitable as a prototype for an integrated medical AI system. First, the architecture is computationally efficient and can be trained on standard hardware without requiring GPUs, aligning well with the objective of building accessible AI solutions. Second, the use of domain-appropriate augmentation improves generalisation while preserving clinical realism. Third, the model achieves high recall and AUC, indicating strong sensitivity to pathological findings — a key requirement for diagnostic-support tools.
+This reveals an important limitation: the model functions largely as a “black box,” producing predictions without clinically interpretable justification. Such lack of interpretability limits its readiness for real-world deployment, where ex plainability is necessary for physician trust, validation, and regulatory approval. Furthermore, class imbalance was not explicitly addressed through weighting strategies such as Focal Loss or cost-sensitive learning, which may affect robustness when applied to different populations.
 
-**Limitations**
+From a purely technical perspective, the model can be considered successful, as it delivers strong predictive performance using a compact architecture. How
+ever, the deeper limitation is not solely technical but also ethical and method ological. In medical AI, decision opacity raises concerns related to transparency, auditability, and accountability of automated systems. Without a clear decision pathway, the model cannot fully satisfy the principle of non maleficence (“do no harm”), as clinicians cannot verify whether predictions rely on clinically relevant evidence or unintended correlations (Brima and Atemkeng, 2024). 
 
-The observed failure cases highlight not only technical limitations but also an interpretability gap. While the model achieves high sensitivity, it provides no explicit reasoning for its predictions, making it difficult to determine whether decisions are based on clinically meaningful patterns or dataset-specific artefacts. The model functions largely as a "black box", producing predictions without clinically interpretable justification. Such lack of interpretability limits its readiness for real-world deployment, where explainability is necessary for physician trust, validation, and regulatory approval.
-
-Furthermore, class imbalance was not explicitly addressed through weighting strategies such as Focal Loss or cost-sensitive learning, which may affect robustness when applied to different populations. In medical AI, decision opacity raises concerns related to transparency, auditability, and accountability of automated systems. Without a clear decision pathway, the model cannot fully satisfy the principle of non-maleficence ("do no harm"), as clinicians cannot verify whether predictions rely on clinically relevant evidence or unintended correlations.
-
-To address this gap, Explainable AI (XAI) techniques such as Grad-CAM or SHAP could be integrated into the pipeline. These methods would allow visualisation of the regions influencing model predictions, transforming the system from a purely predictive tool into an interpretable decision-support aid. Incorporating XAI would not only reduce diagnostic uncertainty but also align the system with emerging ethical and regulatory frameworks for trustworthy medical AI.
+To address this gap, Explainable AI (XAI) techniques such as Grad-CAM or SHAP could be integrated into the pipeline (Bates, 2024, Ukwuoma et al.,2025). These methods would allow visualization of the regions influencing model predictions, transforming the system from a purely predictive tool into an in terpretable decision-support aid. Incorporating XAI would not only reduce diagnostic uncertainty but also align the system with emerging ethical and regulatory frameworks for trustworthy medical AI
 
 ## References
 
