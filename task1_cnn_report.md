@@ -8,7 +8,7 @@ Abeer Alotaibi | February 2026
 
 ## 1. Introduction
 
-This report presents a comprehensive analysis of a Convolutional Neural Network (CNN) developed for binary classification of pneumonia from chest X-ray images using the PneumoniaMNIST dataset. The implemented model achieved 87.66% accuracy with an AUC of 0.9501, demonstrating strong discriminative capability for pneumonia detection. The analysis examines the complete machine learning pipeline including data preprocessing, model architecture, training methodology, evaluation metrics, and failure case analysis.
+This report presents a comprehensive analysis of a Convolutional Neural Network (CNN) developed for binary classification of pneumonia from chest X-ray images using the PneumoniaMNIST dataset. The implemented model achieved 88.14% accuracy with an AUC of 94.67%, demonstrating strong discriminative capability for pneumonia detection. The analysis examines the complete machine learning pipeline including data preprocessing, model architecture, training methodology, evaluation metrics, and failure case analysis.
 
 ## 2. Dataset
 
