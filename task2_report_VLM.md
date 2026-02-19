@@ -2,7 +2,7 @@
 
 **Using Visual Language Model (MedGemma)**
 
-Abeer Alotaibi | February 2026
+Abeer | February 2026
 
 ---
 
@@ -100,6 +100,3 @@ Another limitation is the lack of quantitative output. The CNN can produce a pro
 
 Finally, the model is slow on CPU — each image took 1–3 minutes to process. For batch evaluation of 624 test images, this would require GPU acceleration or a smaller/quantized model variant.
 
----
-
-*End of Task 2 Report*
