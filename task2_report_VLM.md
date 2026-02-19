@@ -69,9 +69,7 @@ prompt_text = (
 <img width="1631" height="761" alt="image" src="https://github.com/user-attachments/assets/e9e8a0b2-a8c6-4380-8e03-0f8b5093e011" />
 
 
-The model produced the most complete and well-formatted output — covering Lung Fields, Heart Size, Mediastinum, Pleura, and Bones in dedicated sections. However, it again reported the lung fields as clear with no consolidation or effusion, missing the pneumonia diagnosis.
-
-This strategy produced the best report format by far, and would be the most useful in a real clinical pipeline as a draft for a radiologist to review. The issue is not the prompt structure — it is the image resolution. Low-resolution 28×28 inputs simply don't carry enough detail for a VLM to reliably catch subtle pathology.
+The prompt was updated to follow RSNA pneumonia detection guidelines explicitly. Despite this refinement, the model produced the same outcome as Strategy 2, missing the pneumonia diagnosis and returning a report similar in content. This could be due to MedGemma being designed as a generative report model rather than a classifier — it produces text based on learned patterns, so even with structured guidance, it may not reliably capture subtle pathology in low-resolution images.
 
 
 ## 4. Qualitative Analysis: VLM vs Ground Truth vs CNN
