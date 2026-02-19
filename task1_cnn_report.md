@@ -43,7 +43,7 @@ convolutional feature extractor rather than dense classification layers, the arc
 
 ## 4. Model Training
 
-The network was trained using the binary cross-entropy loss with logits (`BCEWithLogitsLoss`) and optimised with the Adam optimiser at a learning rate of 1e-3. A step learning rate scheduler reduced the rate by 50% every five epochs to stabilise convergence. Early stopping with a patience of three epochs prevented overfitting, with the best model saved at the lowest validation loss. Training and validation loss curves showed consistent reduction.
+The network was trained using the binary cross-entropy loss with logits (`BCEWithLogitsLoss`) and optimised with the Adam optimiser at a learning rate of 1e-3. A step learning rate scheduler reduced the rate every five epochs to stabilise convergence. Early stopping with a patience of three epochs prevented overfitting, with the best model saved at the lowest validation loss. Training and validation loss curves showed consistent reduction.
 
 | Hyperparameter | Value | Purpose / Justification |
 |---|---|---|
