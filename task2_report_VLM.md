@@ -76,13 +76,13 @@ The prompt was updated to follow RSNA pneumonia detection guidelines explicitly.
 
 Looking across all tested images, a few patterns emerge clearly.
 
-**Where CNN and VLM agree (and are correct):** For clear, well-defined pneumonia cases — typically bacterial pneumonia with dense lobar consolidation — both the CNN and MedGemma's Strategy 1 prompt gave correct answers. The VLM's longer reports in these cases mentioned increased opacity in one lung field, consistent with the ground truth.
+For clear, well-defined pneumonia cases — typically bacterial pneumonia with dense lobar consolidation — the CNN gave more correct answers. As a diagnostic-stage tool, the CNN is better because it is explicitly trained to minimize classification error and directly outputs a binary prediction, making it more reliable for identifying the presence or absence of pneumonia, even when subtle details might be missed by generative models.
 
-**Where both models fail:** The most interesting cases are images where both the CNN and VLM give wrong answers. These tend to be subtle or atypical presentations — early-stage viral pneumonia with faint bilateral infiltrates, or borderline normal X-rays with slight haziness. The CNN missed these because fine details are lost at 28×28. MedGemma missed them for the same reason: when an image is too low resolution, even a medically-trained VLM can't recover the clinical information that was never there.
+The most interesting cases are images where both the CNN and VLM give wrong answers. These tend to be subtle or atypical presentations, such as early-stage viral pneumonia with faint bilateral infiltrates, or borderline normal X-rays with slight haziness. The CNN missed these because fine details are lost at 28×28 resolution. MedGemma missed them for the same reason: when an image is too low resolution, even a medically-trained VLM cannot recover clinical information that was never present.
 
-**Where they disagree:** There were a handful of cases where the CNN predicted Pneumonia but MedGemma's report described a normal chest. In most of these, the ground truth was Normal — meaning MedGemma was actually correct and the CNN had a false positive. This is consistent with the CNN's confusion matrix showing 63 false positives (Normal classified as Pneumonia). The VLM's descriptive output added an extra layer of interpretability here, allowing a human reviewer to see the reasoning rather than just a binary label.
+In the cases where predictions are wrong, the CNN provides no explanation, making it difficult to understand why the image was misclassified. MedGemma, on the other hand, sometimes produces descriptive text that explains its reasoning, even when the prediction is incorrect. This descriptive output can act as a red flag or prompt further investigation, offering more transparency and reducing potential risk compared to an unexplained binary label.
 
-The key takeaway: the VLM doesn't replace the CNN's classification role, but it does complement it. The CNN gives a fast, quantifiable prediction; the VLM explains what is visible in the image — which is exactly how these tools would work in a real clinical support pipeline.
+To summarize, the VLM does not replace the CNN’s classification role, but it complements it. The CNN provides a fast, quantifiable prediction, while the VLM explains what is visible in the image, adding interpretability and context.
 
 ## 5. Model Strengths and Limitations
 
@@ -98,5 +98,4 @@ The clearest limitation is resolution sensitivity. PneumoniaMNIST images are 28�
 
 Another limitation is the lack of quantitative output. The CNN can produce a probability score and be evaluated with AUC, F1, and recall across hundreds of images. The VLM produces text, which requires manual review or an additional NLP layer to evaluate at scale. For this task, qualitative review of 10 images was sufficient, but production deployment would need an automated evaluation pipeline.
 
-Finally, the model is slow on CPU — each image took 1–3 minutes to process. For batch evaluation of 624 test images, this would require GPU acceleration or a smaller/quantized model variant.
-
+Finally, the model is slow on CPU — each image takes a long time to process. For batch evaluation of 624 test images, this would require GPU acceleration or a smaller/quantized model variant.
