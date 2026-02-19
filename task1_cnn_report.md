@@ -67,7 +67,7 @@ On the test set, the CNN achieved accuracy = 88.41%, precision = 85%, recall = 9
 |---|---|---|
 | Accuracy | 88.41% | Overall correctness |
 | Precision | 85.75% | Of predicted pneumonia cases, 89.19% are correct |
-| Recall (Sensitivity) | 97.18% | Detects 93.08% of actual pneumonia cases |
+| Recall (Sensitivity) | 97.18% | Detects 97.18% of actual pneumonia cases |
 | F1-Score | 91.11% | Harmonic mean of precision and recall |
 | AUC-ROC | 94.67% | Excellent discriminative ability |
 
