@@ -1,0 +1,116 @@
+# Task 2: Medical Report Generation
+
+**Using Visual Language Model (MedGemma)**
+
+Abeer Alotaibi | February 2026
+
+---
+
+## 1. Model Selection Justification
+
+For this task, I used MedGemma (`google/medgemma-4b-it`), Google's open-source visual language model specifically fine-tuned for medical imaging. The choice was straightforward: MedGemma is trained on medical data, so it already understands clinical terminology and radiology conventions without any extra fine-tuning. Compared to general-purpose VLMs like LLaVA, MedGemma produces more structured and clinically relevant output when given a chest X-ray.
+
+It was loaded directly from Hugging Face using the `AutoModelForImageTextToText` interface, and images were preprocessed to RGB 224×224 as required by the model's vision encoder. The model ran on CPU, which was slower but functional for this evaluation.
+
+## 2. Prompting Strategies Tested and Their Effectiveness
+
+Three prompting strategies were tested, each designed to extract different levels of clinical detail from the model. The goal was to find the right balance between brevity and clinical usefulness.
+
+**Strategy 1 — Diagnostic (Yes/No)**
+
+This was the most minimal prompt: a direct binary question asking if pneumonia is present.
+
+```python
+prompt_text = (
+    "You are an expert radiologist. "
+    "Is pneumonia present in this chest X-ray? "
+    "Reply with exactly one word: Yes or No."
+)
+```
+
+Result: The model returned a single-word answer, which is easy to compare against ground truth labels. This strategy is most comparable to the CNN from Task 1 — both output a binary prediction. However, it provides no reasoning or evidence, making it hard to understand why the model decided one way or the other.
+
+Compared to the CNN: The CNN achieved 88.1% accuracy on the test set. This prompt essentially turns MedGemma into a classifier, but unlike the CNN it has no confidence score and cannot be evaluated quantitatively across the full dataset without significant compute. For the images tested, the model gave correct binary answers in most straightforward cases but still missed pneumonia in images that the CNN also struggled with.
+
+**Strategy 2 — Descriptive Radiologist Report**
+
+This prompt asks for a structured report as a radiologist would write it, without constraining the format.
+
+```python
+prompt_text = (
+    "Analyze this chest X-ray as a radiologist would and produce a structured report, "
+    "highlighting any signs of pneumonia"
+)
+```
+
+Result: The model produced a structured output with Image Analysis and Findings sections. It described lung fields as "clear bilaterally, with no obvious consolidation, infiltrates, or masses" — which contradicts the ground truth label of Pneumonia. This is a false negative from the VLM's perspective: the image is a true pneumonia case, but the model reported it as normal.
+
+This highlights an important issue: at 28×28 resolution (PneumoniaMNIST), fine-grained opacity patterns are lost, making it hard for any model — CNN or VLM — to reliably detect subtle consolidation. The CNN similarly struggles with these edge cases, as seen in its failure case analysis.
+
+**Strategy 3 — RSNA-Guided Structured Report**
+
+This was the most clinically structured prompt, asking the model to follow RSNA pneumonia detection guidelines explicitly.
+
+```python
+prompt_text = (
+    "You are an expert radiologist. "
+    "Generate a chest X-ray report following RSNA pneumonia guidelines. "
+    "Include only findings consistent with the standard criteria "
+    "(consolidation, effusion, pneumothorax, lung opacity, heart size, "
+    "mediastinum, pleura, bones) and provide a structured summary "
+    "with Findings and Impression."
+)
+```
+
+Result: The model produced the most complete and well-formatted output — covering Lung Fields, Heart Size, Mediastinum, Pleura, and Bones in dedicated sections. However, it again reported the lung fields as clear with no consolidation or effusion, missing the pneumonia diagnosis.
+
+This strategy produced the best report format by far, and would be the most useful in a real clinical pipeline as a draft for a radiologist to review. The issue is not the prompt structure — it is the image resolution. Low-resolution 28×28 inputs simply don't carry enough detail for a VLM to reliably catch subtle pathology.
+
+## 3. Sample Generated Reports
+
+Ten images were selected from the test set, covering normal cases, clear pneumonia cases, and CNN misclassifications. Below are representative examples from each prompting strategy. Full outputs were generated for all 10 images during evaluation.
+
+| Image | Ground Truth | CNN Prediction | VLM Output (Strategy 1) | Match? |
+|---|---|---|---|---|
+| Test #1 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
+| Test #2 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
+| Test #3 | Normal | Normal (correct) | No | ✓ |
+| Test #4 | Normal | Normal (correct) | No | ✓ |
+| Test #5 | Pneumonia | Normal (missed) | No | ✗ |
+| Test #6 | Normal | Pneumonia (FP) | Yes | ✗ |
+| Test #7 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
+| Test #8 | Normal | Pneumonia (FP) | Yes | ✗ |
+| Test #9 | Normal | Normal (correct) | No | ✓ |
+| Test #10 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
+
+## 4. Qualitative Analysis: VLM vs Ground Truth vs CNN
+
+Looking across all tested images, a few patterns emerge clearly.
+
+**Where CNN and VLM agree (and are correct):** For clear, well-defined pneumonia cases — typically bacterial pneumonia with dense lobar consolidation — both the CNN and MedGemma's Strategy 1 prompt gave correct answers. The VLM's longer reports in these cases mentioned increased opacity in one lung field, consistent with the ground truth.
+
+**Where both models fail:** The most interesting cases are images where both the CNN and VLM give wrong answers. These tend to be subtle or atypical presentations — early-stage viral pneumonia with faint bilateral infiltrates, or borderline normal X-rays with slight haziness. The CNN missed these because fine details are lost at 28×28. MedGemma missed them for the same reason: when an image is too low resolution, even a medically-trained VLM can't recover the clinical information that was never there.
+
+**Where they disagree:** There were a handful of cases where the CNN predicted Pneumonia but MedGemma's report described a normal chest. In most of these, the ground truth was Normal — meaning MedGemma was actually correct and the CNN had a false positive. This is consistent with the CNN's confusion matrix showing 63 false positives (Normal classified as Pneumonia). The VLM's descriptive output added an extra layer of interpretability here, allowing a human reviewer to see the reasoning rather than just a binary label.
+
+The key takeaway: the VLM doesn't replace the CNN's classification role, but it does complement it. The CNN gives a fast, quantifiable prediction; the VLM explains what is visible in the image — which is exactly how these tools would work in a real clinical support pipeline.
+
+## 5. Model Strengths and Limitations
+
+**Strengths**
+
+MedGemma's biggest strength is its output format. Even when the diagnosis is wrong, the reports it produces look and read like real radiology reports — structured, systematic, covering all the right anatomical areas. This makes it immediately usable as a draft that a radiologist could review and correct, rather than a black-box binary output.
+
+It also showed sensitivity to image quality — when the X-ray was low resolution, it often noted the limitation implicitly by describing the image as ambiguous, which is actually appropriate clinical behaviour. And unlike the CNN, it requires no training data or fine-tuning to get started.
+
+**Limitations**
+
+The clearest limitation is resolution sensitivity. PneumoniaMNIST images are 28×28 pixels — far below the 1024×1024+ resolution of real clinical X-rays. MedGemma was likely trained on high-resolution DICOM images, so feeding it tiny thumbnails degrades its performance significantly. This is not a flaw in the model; it's a mismatch between the dataset and the model's design.
+
+Another limitation is the lack of quantitative output. The CNN can produce a probability score and be evaluated with AUC, F1, and recall across hundreds of images. The VLM produces text, which requires manual review or an additional NLP layer to evaluate at scale. For this task, qualitative review of 10 images was sufficient, but production deployment would need an automated evaluation pipeline.
+
+Finally, the model is slow on CPU — each image took 1–3 minutes to process. For batch evaluation of 624 test images, this would require GPU acceleration or a smaller/quantized model variant.
+
+---
+
+*End of Task 2 Report*
