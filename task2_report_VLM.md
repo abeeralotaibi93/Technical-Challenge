@@ -28,6 +28,9 @@ prompt_text = (
 )
 ```
 
+<img width="612" height="539" alt="image" src="https://github.com/user-attachments/assets/1266e7f2-1ea8-4dc8-8865-ef864d6e7518" />
+
+
 The model returned a single-word answer, which is easy to compare against ground truth labels. This strategy is most comparable to the CNN from Task 1 — both output a binary prediction. However, it provides no reasoning or evidence, making it hard to understand why the model decided one way or the other. Compared to the CNN, the CNN achieved 88% accuracy on the test set. This prompt essentially turns MedGemma into a classifier, but unlike the CNN it has no confidence score and cannot be evaluated quantitatively across the full dataset without significant compute. For the image tested, the model gave a wrong answer. This could happen because MedGemma is designed as a generative report model, not a classifier — it produces text based on learned patterns, so a single-word answer might not fully capture uncertainty or subtle features in the X-ray. Unlike the CNN, which is trained explicitly on labeled examples to minimize classification error, MedGemma may miss fine-grained visual cues or overfit to its language priors.
 
 **Strategy 2 — Descriptive Radiologist Report**
@@ -40,6 +43,9 @@ prompt_text = (
     "highlighting any signs of pneumonia"
 )
 ```
+
+<img width="1617" height="800" alt="image" src="https://github.com/user-attachments/assets/1ae76262-773e-46fd-b9a2-71eb3231875a" />
+
 
 The model produced a structured output with Image Analysis and Findings sections. It described lung fields as 'clear bilaterally, with no obvious consolidation, infiltrates, or masses' — which contradicts the ground truth label of Pneumonia. This is a false negative from the VLM's perspective: the image is a true pneumonia case, but the model reported it as normal.
 It's worth noting that images were preprocessed and upsampled to 224×224 RGB before being passed to MedGemma, so the model did receive a reasonably sized input. However, upsampling a 28×28 image to 224×224 does not recover any lost detail — it simply scales up the same limited pixel information. The underlying visual content is still constrained by the original low-resolution capture, which means subtle opacities and fine infiltrate patterns remain indistinguishable even at the larger size. The CNN faces the same underlying issue.
@@ -59,6 +65,9 @@ prompt_text = (
     "with Findings and Impression."
 )
 ```
+
+<img width="1631" height="761" alt="image" src="https://github.com/user-attachments/assets/e9e8a0b2-a8c6-4380-8e03-0f8b5093e011" />
+
 
 The model produced the most complete and well-formatted output — covering Lung Fields, Heart Size, Mediastinum, Pleura, and Bones in dedicated sections. However, it again reported the lung fields as clear with no consolidation or effusion, missing the pneumonia diagnosis.
 
