@@ -28,9 +28,7 @@ prompt_text = (
 )
 ```
 
-Result: The model returned a single-word answer, which is easy to compare against ground truth labels. This strategy is most comparable to the CNN from Task 1 — both output a binary prediction. However, it provides no reasoning or evidence, making it hard to understand why the model decided one way or the other.
-
-Compared to the CNN: The CNN achieved 88.1% accuracy on the test set. This prompt essentially turns MedGemma into a classifier, but unlike the CNN it has no confidence score and cannot be evaluated quantitatively across the full dataset without significant compute. For the images tested, the model gave correct binary answers in most straightforward cases but still missed pneumonia in images that the CNN also struggled with.
+The model returned a single-word answer, which is easy to compare against ground truth labels. This strategy is most comparable to the CNN from Task 1 — both output a binary prediction. However, it provides no reasoning or evidence, making it hard to understand why the model decided one way or the other. Compared to the CNN, the CNN achieved 88% accuracy on the test set. This prompt essentially turns MedGemma into a classifier, but unlike the CNN it has no confidence score and cannot be evaluated quantitatively across the full dataset without significant compute. For the image tested, the model gave a wrong answer. This could happen because MedGemma is designed as a generative report model, not a classifier — it produces text based on learned patterns, so a single-word answer might not fully capture uncertainty or subtle features in the X-ray. Unlike the CNN, which is trained explicitly on labeled examples to minimize classification error, MedGemma may miss fine-grained visual cues or overfit to its language priors.
 
 **Strategy 2 — Descriptive Radiologist Report**
 
@@ -43,7 +41,7 @@ prompt_text = (
 )
 ```
 
-Result (shown in Image 1 — Ground Truth: Pneumonia): The model produced a structured output with Image Analysis and Findings sections. It described lung fields as 'clear bilaterally, with no obvious consolidation, infiltrates, or masses' — which contradicts the ground truth label of Pneumonia. This is a false negative from the VLM's perspective: the image is a true pneumonia case, but the model reported it as normal.
+The model produced a structured output with Image Analysis and Findings sections. It described lung fields as 'clear bilaterally, with no obvious consolidation, infiltrates, or masses' — which contradicts the ground truth label of Pneumonia. This is a false negative from the VLM's perspective: the image is a true pneumonia case, but the model reported it as normal.
 It's worth noting that images were preprocessed and upsampled to 224×224 RGB before being passed to MedGemma, so the model did receive a reasonably sized input. However, upsampling a 28×28 image to 224×224 does not recover any lost detail — it simply scales up the same limited pixel information. The underlying visual content is still constrained by the original low-resolution capture, which means subtle opacities and fine infiltrate patterns remain indistinguishable even at the larger size. The CNN faces the same underlying issue.
 
 
@@ -62,14 +60,9 @@ prompt_text = (
 )
 ```
 
-Result: The model produced the most complete and well-formatted output — covering Lung Fields, Heart Size, Mediastinum, Pleura, and Bones in dedicated sections. However, it again reported the lung fields as clear with no consolidation or effusion, missing the pneumonia diagnosis.
+The model produced the most complete and well-formatted output — covering Lung Fields, Heart Size, Mediastinum, Pleura, and Bones in dedicated sections. However, it again reported the lung fields as clear with no consolidation or effusion, missing the pneumonia diagnosis.
 
 This strategy produced the best report format by far, and would be the most useful in a real clinical pipeline as a draft for a radiologist to review. The issue is not the prompt structure — it is the image resolution. Low-resolution 28×28 inputs simply don't carry enough detail for a VLM to reliably catch subtle pathology.
-
-## 3. Sample Generated Reports
-
-Below are representative examples from each prompting strategy.
-
 
 
 ## 4. Qualitative Analysis: VLM vs Ground Truth vs CNN
