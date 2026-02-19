@@ -43,9 +43,9 @@ prompt_text = (
 )
 ```
 
-Result: The model produced a structured output with Image Analysis and Findings sections. It described lung fields as "clear bilaterally, with no obvious consolidation, infiltrates, or masses" — which contradicts the ground truth label of Pneumonia. This is a false negative from the VLM's perspective: the image is a true pneumonia case, but the model reported it as normal.
+Result (shown in Image 1 — Ground Truth: Pneumonia): The model produced a structured output with Image Analysis and Findings sections. It described lung fields as 'clear bilaterally, with no obvious consolidation, infiltrates, or masses' — which contradicts the ground truth label of Pneumonia. This is a false negative from the VLM's perspective: the image is a true pneumonia case, but the model reported it as normal.
+It's worth noting that images were preprocessed and upsampled to 224×224 RGB before being passed to MedGemma, so the model did receive a reasonably sized input. However, upsampling a 28×28 image to 224×224 does not recover any lost detail — it simply scales up the same limited pixel information. The underlying visual content is still constrained by the original low-resolution capture, which means subtle opacities and fine infiltrate patterns remain indistinguishable even at the larger size. The CNN faces the same underlying issue.
 
-This highlights an important issue: at 28×28 resolution (PneumoniaMNIST), fine-grained opacity patterns are lost, making it hard for any model — CNN or VLM — to reliably detect subtle consolidation. The CNN similarly struggles with these edge cases, as seen in its failure case analysis.
 
 **Strategy 3 — RSNA-Guided Structured Report**
 
