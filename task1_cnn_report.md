@@ -73,7 +73,7 @@ On the test set, the CNN achieved accuracy = 88.14%, precision = 85.76%, recall 
 
 *Table 2: Performance Metrics for PneumoniaCNN*
 
-From the confusion matrix, true positives (pneumonia correctly detected) = 381, true negatives (normal correctly detected) = 171, false positives = 63, and false negatives = 11. These numbers reflect an engineering trade-off favouring sensitivity: the network prioritises detecting pneumonia and minimises false negatives (only 11 missed cases), which is clinically important. The 63 false positives primarily result from subtle shadows or low-contrast patterns in normal X-rays that the CNN misinterprets as pathological, highlighting the limitations imposed by low-resolution input.
+From the confusion matrix, true positives (pneumonia correctly detected) = 379, true negatives (normal correctly detected) = 171, false positives = 63, and false negatives = 11. These numbers reflect an engineering trade-off favouring sensitivity: the network prioritises detecting pneumonia and minimises false negatives (only 11 missed cases), which is clinically important. The 63 false positives primarily result from subtle shadows or low-contrast patterns in normal X-rays that the CNN misinterprets as pathological, highlighting the limitations imposed by low-resolution input.
 
 <img width="513" height="457" alt="image" src="https://github.com/user-attachments/assets/679c899e-7877-4dc4-8403-d2d744c3d54e" />
 
