@@ -61,7 +61,7 @@ The network was trained using the binary cross-entropy loss with logits (`BCEWit
 
 ## 5. Evaluation Metrics and Results
 
-On the test set, the CNN achieved accuracy = 88.41%, precision = 85.76%, recall = 97.18%, F1-score = 91.11%, and AUC = 94.67%, indicating strong overall performance. The confusion matrix quantifies classification outcomes as shown in Table 2 below.
+On the test set, the CNN achieved accuracy = 88.41%, precision = 85%, recall = 97%, F1-score = 91%, and AUC = 94%, indicating strong overall performance. The confusion matrix quantifies classification outcomes as shown in Table 2 below.
 
 | Metric | Value | Clinical Significance |
 |---|---|---|
