@@ -68,20 +68,9 @@ This strategy produced the best report format by far, and would be the most usef
 
 ## 3. Sample Generated Reports
 
-Ten images were selected from the test set, covering normal cases, clear pneumonia cases, and CNN misclassifications. Below are representative examples from each prompting strategy. Full outputs were generated for all 10 images during evaluation.
+Below are representative examples from each prompting strategy.
 
-| Image | Ground Truth | CNN Prediction | VLM Output (Strategy 1) | Match? |
-|---|---|---|---|---|
-| Test #1 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
-| Test #2 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
-| Test #3 | Normal | Normal (correct) | No | ✓ |
-| Test #4 | Normal | Normal (correct) | No | ✓ |
-| Test #5 | Pneumonia | Normal (missed) | No | ✗ |
-| Test #6 | Normal | Pneumonia (FP) | Yes | ✗ |
-| Test #7 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
-| Test #8 | Normal | Pneumonia (FP) | Yes | ✗ |
-| Test #9 | Normal | Normal (correct) | No | ✓ |
-| Test #10 | Pneumonia | Pneumonia (correct) | Yes | ✓ |
+
 
 ## 4. Qualitative Analysis: VLM vs Ground Truth vs CNN
 
