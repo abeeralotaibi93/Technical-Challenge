@@ -99,3 +99,9 @@ The clearest limitation is resolution sensitivity. PneumoniaMNIST images are 28Ã
 Another limitation is the lack of quantitative output. The CNN can produce a probability score and be evaluated with AUC, F1, and recall across hundreds of images. The VLM produces text, which requires manual review or an additional NLP layer to evaluate at scale. For this task, qualitative review of 10 images was sufficient, but production deployment would need an automated evaluation pipeline.
 
 Finally, the model is slow on CPU â€” each image takes a long time to process. For batch evaluation of 624 test images, this would require GPU acceleration or a smaller/quantized model variant.
+
+
+## 5. Implementation Requirement: Hugging Face API Key
+
+
+To load (google/medgemma-4b-it) from the Hugging Face model hub, an API key is required. Hugging Face hosts large and gated models that require authentication before model weights can be downloaded. Therefore, a personal access token must be generated from a Hugging Face account and used to log in via the CLI or programmatically in Python. For security and privacy reasons, the API key used during development has been removed from the submitted code. Users running the notebook must insert their own Hugging Face access token to successfully authenticate and load the model. Without a valid API key, the model cannot be accessed, and an authentication error will occur when attempting to load it.
