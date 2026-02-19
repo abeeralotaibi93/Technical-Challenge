@@ -2,7 +2,7 @@
 
 **Using Convolutional Neural Networks (PneumoniaMNIST)**
 
-Abeer Alotaibi | February 2026
+Abeer | February 2026
 
 ---
 
