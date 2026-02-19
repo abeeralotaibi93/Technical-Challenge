@@ -70,7 +70,7 @@ From the confusion matrix, true positives (pneumonia correctly detected) = 381, 
 
 The ROC curve rises sharply at first and forms a smooth, convex shape, getting close to the top-left corner, with an AUC of 0.9467. This means the model is very good at distinguishing pneumonia cases from normal ones. Across most thresholds, it achieves high true positive rates while keeping false positives low, indicating that it consistently identifies pneumonia correctly.
 
-The training curves show that the model is learning well. Both the training and validation losses started around 0.58 and 0.53 but steadily dropped to about 0.17 by the fifteenth epoch. The validation loss closely follows the training loss and even dips slightly below it at times. Since the two curves move together without splitting apart, this suggests the model is not overfitting and generalises well, showing that data augmentation and early stopping worked effectively.
+The training curves show that the model is learning well. Both the training and validation losses started around 0.53 and 0.38 but steadily dropped to about 0.17 by the fifteenth epoch. The validation loss closely follows the training loss and even dips slightly below it at times. Since the two curves move together without splitting apart, this suggests the model is not overfitting and generalises well, showing that data augmentation and early stopping worked effectively.
 
 ### 5.1 Failure Case Analysis
 
