@@ -54,15 +54,15 @@ The network was trained using the binary cross-entropy loss with logits (`BCEWit
 
 ## 5. Evaluation Metrics and Results
 
-On the test set, the CNN achieved accuracy = 87.66%, precision = 84.86%, recall = 97.69%, F1-score = 90.82%, and AUC = 0.9499, indicating strong overall performance. The confusion matrix quantifies classification outcomes as shown in Table 2 below.
+On the test set, the CNN achieved accuracy = 88.14%, precision = 85.76%, recall = 97.18%, F1-score = 91.11%, and AUC = 94.67%, indicating strong overall performance. The confusion matrix quantifies classification outcomes as shown in Table 2 below.
 
 | Metric | Value | Clinical Significance |
 |---|---|---|
-| Accuracy | 88.62% | Overall correctness |
-| Precision | 89.19% | Of predicted pneumonia cases, 89.19% are correct |
-| Recall (Sensitivity) | 93.08% | Detects 93.08% of actual pneumonia cases |
-| F1-Score | 91.09% | Harmonic mean of precision and recall |
-| AUC-ROC | 95.01% | Excellent discriminative ability |
+| Accuracy | 88.41% | Overall correctness |
+| Precision | 85.75% | Of predicted pneumonia cases, 89.19% are correct |
+| Recall (Sensitivity) | 97.18% | Detects 93.08% of actual pneumonia cases |
+| F1-Score | 91.11% | Harmonic mean of precision and recall |
+| AUC-ROC | 94.67% | Excellent discriminative ability |
 
 *Table 2: Performance Metrics for PneumoniaCNN*
 
